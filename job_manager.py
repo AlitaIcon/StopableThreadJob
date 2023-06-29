@@ -57,6 +57,7 @@ class JobManager:
             except StopRunningCommand as e:
                 print(f"{job_id} has been stopped.")
             except Exception as e:
+                print(f"{job_id} is finished.")
                 raise e
             finally:
                 if job_id in self.job_store:
@@ -65,6 +66,7 @@ class JobManager:
 
         with self.job_lock:
             t = TerminableThread(target=inner_job, *args, **kwargs)
+            t.daemon = True
             # if job_id in self.job:
             #     self.job[job_id].terminate(StopRunningCommand)
             self.job_store[job_id] = t
